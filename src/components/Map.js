@@ -13,10 +13,8 @@ import { easeIn } from 'ol/easing'
 import OSM from 'ol/source/OSM'
 // import { BingMaps, Vector as olVectorSource } from 'ol/source'
 import { fromLonLat } from 'ol/proj'
-import debounce from 'lodash.debounce'
 import STRAVA_LOGO from '../images/strava-logo.svg'
-
-console.log(STRAVA_LOGO)
+import Pins from './Pins'
 
 const DENVER_COORD = fromLonLat([-104.991531, 39.742043])
 
@@ -34,7 +32,7 @@ class Map extends React.Component {
     const map = new olMap({
       view: new olView({
         center: DENVER_COORD,
-        zoom: 12
+        zoom: 11
       }),
       layers: [
         baseLayer,
@@ -44,6 +42,7 @@ class Map extends React.Component {
     })
 
     this.state = {
+      initialized: false,
       baseLayer,
       layer,
       map
@@ -60,45 +59,40 @@ class Map extends React.Component {
     stravaLogoFeature.setStyle(
       new olStyle({
         image: new olIcon({
-          src: STRAVA_LOGO
+          src: STRAVA_LOGO,
+          opacity: .8
         })
       })
     )
     // add strava logo after tiles load in
     map.once('rendercomplete', () => {
-      source.addFeature(stravaLogoFeature)
+      setTimeout(() => source.addFeature(stravaLogoFeature), 400)
     })
-    // const tileLoadDebounce = debounce(() => {
-    //   source.addFeature(stravaLogoFeature)
-    //   map.un('postrender', tileLoadDebounce)
-    // }, 2000)
-    // map.on('postrender', tileLoadDebounce)
-    source.on('addfeature', () => {
-      console.log('feature added!')
-      stravaLogoFeature.getStyle().getImage().setScale(1)
-      map.getView().setZoom(12)
-
-      setTimeout(this.zoomToExtent, 3000)
+    source.on('addfeature', (e) => {
+      // animation
       setTimeout(() => {
-        console.log(stravaLogoFeature.getStyle().getImage().setScale(.5))
-      }, 3000)
-    })
-  }
+        const view = map.getView()
 
-  zoomToExtent = () => {
-    const { map } = this.state
-    const view = map.getView()
-
-    view.animate({
-      anchor: DENVER_COORD,
-      easing: easeIn,
-      duration: 1800,
-      zoom: 5
+        // zoom out to full extent
+        view.animate({
+          anchor: DENVER_COORD,
+          easing: easeIn,
+          duration: 400,
+          zoom: 5
+        })
+        // scale logo down for new extent
+        stravaLogoFeature.getStyle().getImage().setScale(.5)
+        this.setState({ initialized: true })
+      }, 1200)
     })
   }
 
   render () {
-    return null
+    const { initialized } = this.state
+
+    return !initialized ? null : (
+      <Pins />
+    )
   }
 }
 
