@@ -66,10 +66,10 @@ class Map extends React.Component {
     )
     // add strava logo after tiles load in
     map.once('rendercomplete', () => {
-      setTimeout(() => source.addFeature(stravaLogoFeature), 400)
+      setTimeout(() => source.addFeature(stravaLogoFeature), 800)
     })
     source.on('addfeature', (e) => {
-      // animation
+      // animation delay
       setTimeout(() => {
         const view = map.getView()
 
@@ -83,7 +83,7 @@ class Map extends React.Component {
         // scale logo down for new extent
         stravaLogoFeature.getStyle().getImage().setScale(.5)
         this.setState({ initialized: true })
-      }, 1200)
+      }, 800)
     })
   }
 

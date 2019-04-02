@@ -2,11 +2,10 @@ import React from  'react'
 
 class Pins extends React.Component {
   componentDidMount () {
-    const clientId = process.env.client_id
-    console.log(process.env)
-    const url = `https://www.strava.com/oauth/authorize?client_id=${clientId}`
+    const clientId = '33983'
+    const url = `https://www.strava.com/oauth/authorize?client_id=33983&response_type=code&redirect_uri=http://localhost:6000&approval_prompt=force`
     const config = {
-
+      // mode: 'no-cors'
     }
 
     fetch(url, config)
