@@ -88,10 +88,10 @@ class Map extends React.Component {
   }
 
   render () {
-    const { initialized } = this.state
+    const { initialized, layer, map } = this.state
 
     return !initialized ? null : (
-      <Pins />
+      <Pins layer={layer} map={map} />
     )
   }
 }
