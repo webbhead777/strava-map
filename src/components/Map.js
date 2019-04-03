@@ -17,6 +17,7 @@ import STRAVA_LOGO from '../images/strava-logo.svg'
 import Pins from './Pins'
 
 const DENVER_COORD = fromLonLat([-104.991531, 39.742043])
+const STL_COORD = fromLonLat([-90.4994, 38.6270])
 
 class Map extends React.Component {
   constructor () {
@@ -68,27 +69,32 @@ class Map extends React.Component {
     map.once('rendercomplete', () => {
       setTimeout(() => source.addFeature(stravaLogoFeature), 800)
     })
-    source.on('addfeature', (e) => {
+    source.once('addfeature', (e) => {
       // animation delay
       setTimeout(() => {
         const view = map.getView()
 
-        // zoom out to full extent
+        map.once('rendercomplete', () => {
+          this.setState({ initialized: true })
+        })
+
+        // move view to stl
         view.animate({
           anchor: DENVER_COORD,
+          center: STL_COORD,
           easing: easeIn,
           duration: 400,
-          zoom: 5
+          zoom: 11
         })
         // scale logo down for new extent
         stravaLogoFeature.getStyle().getImage().setScale(.5)
-        this.setState({ initialized: true })
       }, 800)
     })
   }
 
   render () {
     const { initialized, layer, map } = this.state
+    console.log('render')
 
     return !initialized ? null : (
       <Pins layer={layer} map={map} />

@@ -1,4 +1,5 @@
 import React from  'react'
+import olView from 'ol/View'
 import olFeature from 'ol/Feature'
 import olPoint from 'ol/geom/Point'
 import olStyle from 'ol/style/Style'
@@ -6,8 +7,12 @@ import olIcon from 'ol/style/Icon'
 import olCircleStyle from 'ol/style/Circle'
 import olFill from 'ol/style/Fill'
 import olStroke from 'ol/style/Stroke'
+import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
+
+const STL_COORD = fromLonLat([-90.4994, 38.6270])
+const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
 
 class Pins extends React.Component {
   componentDidMount () {
@@ -55,6 +60,19 @@ class Pins extends React.Component {
         }, 600)
       })
     })
+
+    // animate view to full extent
+    setTimeout(() => {
+      const view = map.getView()
+
+      view.animate({
+        anchor: STL_COORD,
+        center: US_CENTER_COORD,
+        easing: easeIn,
+        duration: 400,
+        zoom: 5
+      })
+    }, 2400)
   }
 
   render () {
