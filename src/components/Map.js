@@ -36,6 +36,7 @@ class Map extends React.Component {
         zoom: 11
       }),
       controls: [],
+      interactions: [], // remove interactions to add back after animation
       layers: [
         baseLayer,
         layer

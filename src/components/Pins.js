@@ -7,6 +7,8 @@ import olIcon from 'ol/style/Icon'
 import olCircleStyle from 'ol/style/Circle'
 import olFill from 'ol/style/Fill'
 import olStroke from 'ol/style/Stroke'
+import olDoubleClickZoom from 'ol/interaction/DoubleClickZoom'
+import olMouseWheelZoom from 'ol/interaction/MouseWheelZoom'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
@@ -72,7 +74,12 @@ class Pins extends React.Component {
                 })
               })
             )
-            if (i === activities.length - 1) this.setState({ animationDone: true })
+            if (i === activities.length - 1) {
+              this.setState({ animationDone: true })
+              // add interactions back no that animation is done
+              map.addInteraction(new olDoubleClickZoom())
+              map.addInteraction(new olMouseWheelZoom())
+            }
           }, 600)
         })
       })
@@ -88,6 +95,7 @@ class Pins extends React.Component {
           duration: 400,
           zoom: 5
         })
+
       }, 2400)
     }, 1000)
   }
@@ -96,12 +104,14 @@ class Pins extends React.Component {
     return !this.state.animationDone
       ? null
       : (
-        <div className='container'>
-          <div className='row'>Strava Activities: <span>{ACTIVITIES.length}</span></div>
-          <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
-          <div className='row'># of Activities in Colorado: <span>0</span></div>
-          <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me fix this</em>☝🏻</span></div>
-        </div>
+        <a href='https://www.strava.com/athletes/28790206' target='_blank'>
+          <div className='container'>
+            <div className='row'>Strava Activities: <span>{ACTIVITIES.length}</span></div>
+            <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
+            <div className='row'># of Activities in Colorado: <span>0</span></div>
+            <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me fix this</em>☝🏻</span></div>
+          </div>
+        </a>
       )
   }
 }
