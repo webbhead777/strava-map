@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import Map from './components/Map'
+import LOGO from './images/powered_by_strava.png'
 
 class App extends Component {
   render() {
     return (
-      <Map />
+      <div>
+        <Map />
+        <img className='image' src={LOGO} />
+      </div>
     )
   }
 }

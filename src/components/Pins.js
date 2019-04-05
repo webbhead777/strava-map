@@ -13,12 +13,26 @@ import ACTIVITIES from '../data/activities'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
+// this is hacky
+let distanceInMeters = 0
+ACTIVITIES.forEach(({ distance }) => distanceInMeters += distance)
+const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
+console.log(totalDistance)
 
 class Pins extends React.Component {
+  constructor () {
+    super()
+
+    this.state = {
+      animationDone: false
+    }
+  }
+
   componentDidMount () {
     const { layer, map } = this.props
     const source = layer.getSource()
     const activities = ACTIVITIES.reverse()
+    console.log(activities)
 
     activities.forEach((activity, i) => {
       const { start_latlng: coords } = activity
@@ -57,6 +71,7 @@ class Pins extends React.Component {
               })
             })
           )
+          if (i === activities.length - 1) this.setState({ animationDone: true })
         }, 600)
       })
     })
@@ -76,7 +91,16 @@ class Pins extends React.Component {
   }
 
   render () {
-    return null
+    return !this.state.animationDone
+      ? null
+      : (
+        <div className='container'>
+          <div className='row'>Strava Activities: <span>{ACTIVITIES.length}</span></div>
+          <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
+          <div className='row'># of Activities in Colorado: <span>0</span></div>
+          <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me fix this</em>☝🏻</span></div>
+        </div>
+      )
   }
 }
 

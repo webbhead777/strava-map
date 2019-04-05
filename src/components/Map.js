@@ -60,8 +60,7 @@ class Map extends React.Component {
     stravaLogoFeature.setStyle(
       new olStyle({
         image: new olIcon({
-          src: STRAVA_LOGO,
-          opacity: .8
+          src: STRAVA_LOGO
         })
       })
     )
@@ -94,7 +93,6 @@ class Map extends React.Component {
 
   render () {
     const { initialized, layer, map } = this.state
-    console.log('render')
 
     return !initialized ? null : (
       <Pins layer={layer} map={map} />
