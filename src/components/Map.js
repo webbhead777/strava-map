@@ -35,6 +35,7 @@ class Map extends React.Component {
         center: DENVER_COORD,
         zoom: 11
       }),
+      controls: [],
       layers: [
         baseLayer,
         layer
