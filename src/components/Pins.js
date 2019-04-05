@@ -9,6 +9,7 @@ import olFill from 'ol/style/Fill'
 import olStroke from 'ol/style/Stroke'
 import olDoubleClickZoom from 'ol/interaction/DoubleClickZoom'
 import olMouseWheelZoom from 'ol/interaction/MouseWheelZoom'
+import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
@@ -79,6 +80,7 @@ class Pins extends React.Component {
               // add interactions back no that animation is done
               map.addInteraction(new olDoubleClickZoom())
               map.addInteraction(new olMouseWheelZoom())
+              map.addInteraction(new olDragPan())
             }
           }, 600)
         })
