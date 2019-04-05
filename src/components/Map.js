@@ -73,10 +73,6 @@ class Map extends React.Component {
       setTimeout(() => {
         const view = map.getView()
 
-        map.once('rendercomplete', () => {
-          this.setState({ initialized: true })
-        })
-
         // move view to stl
         view.animate({
           anchor: DENVER_COORD,
@@ -87,6 +83,10 @@ class Map extends React.Component {
         })
         // scale logo down for new extent
         stravaLogoFeature.getStyle().getImage().setScale(.5)
+        // slightly longer than animation duration
+        setTimeout(() => {
+          this.setState({ initialized: true })
+        }, 1000)
       }, 800)
     })
   }

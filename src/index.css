@@ -35,6 +35,7 @@ code {
   z-index: 99;
   min-height: 80px;
   min-width: 220px;
+  border-radius: 4px;
   padding: 10px;
   bottom: 130px;
   left: 50px;

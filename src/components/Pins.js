@@ -17,7 +17,6 @@ const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
 let distanceInMeters = 0
 ACTIVITIES.forEach(({ distance }) => distanceInMeters += distance)
 const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
-console.log(totalDistance)
 
 class Pins extends React.Component {
   constructor () {
@@ -34,60 +33,63 @@ class Pins extends React.Component {
     const activities = ACTIVITIES.reverse()
     console.log(activities)
 
-    activities.forEach((activity, i) => {
-      const { start_latlng: coords } = activity
-      console.log('coords', coords.reverse())
-      const feature = new olFeature({
-        geometry: new olPoint(fromLonLat(coords))
-      })
+    setTimeout(() => {
 
-      feature.setStyle(
-        new olStyle({
-          image: new olCircleStyle({
-            radius: 10,
-            fill: new olFill({ color: '#f8ab87' }),
-            stroke: new olStroke({
-              color: '#fc4c02', width: 4
-            })
-          })
+      activities.forEach((activity, i) => {
+        const { start_latlng: coords } = activity
+        console.log('coords', coords.reverse())
+        const feature = new olFeature({
+          geometry: new olPoint(fromLonLat(coords))
         })
-      )
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          source.addFeature(feature)
-          resolve(feature)
-        }, i * 20)
-      })
-      .then(feature => {
-        setTimeout(() => {
-          feature.setStyle(
-            new olStyle({
-              image: new olCircleStyle({
-                radius: 5,
-                fill: new olFill({ color: '#fc4c02' }),
-                stroke: new olStroke({
-                  color: '#fc4c02', width: 2
-                })
+
+        feature.setStyle(
+          new olStyle({
+            image: new olCircleStyle({
+              radius: 10,
+              fill: new olFill({ color: '#f8ab87' }),
+              stroke: new olStroke({
+                color: '#fc4c02', width: 4
               })
             })
-          )
-          if (i === activities.length - 1) this.setState({ animationDone: true })
-        }, 600)
+          })
+        )
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            source.addFeature(feature)
+            resolve(feature)
+          }, i * 22)
+        })
+        .then(feature => {
+          setTimeout(() => {
+            feature.setStyle(
+              new olStyle({
+                image: new olCircleStyle({
+                  radius: 5,
+                  fill: new olFill({ color: '#fc4c02' }),
+                  stroke: new olStroke({
+                    color: '#fc4c02', width: 2
+                  })
+                })
+              })
+            )
+            if (i === activities.length - 1) this.setState({ animationDone: true })
+          }, 600)
+        })
       })
-    })
 
-    // animate view to full extent
-    setTimeout(() => {
-      const view = map.getView()
+      // animate view to full extent
+      setTimeout(() => {
+        const view = map.getView()
 
-      view.animate({
-        anchor: STL_COORD,
-        center: US_CENTER_COORD,
-        easing: easeIn,
-        duration: 400,
-        zoom: 5
-      })
-    }, 2400)
+        view.animate({
+          anchor: STL_COORD,
+          center: US_CENTER_COORD,
+          easing: easeIn,
+          duration: 400,
+          zoom: 5
+        })
+      }, 2400)
+    }, 1000)
   }
 
   render () {
