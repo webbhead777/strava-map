@@ -12,6 +12,7 @@ import olMouseWheelZoom from 'ol/interaction/MouseWheelZoom'
 import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
+import { containsCoordinate } from 'ol/extent'
 import ACTIVITIES from '../data/activities'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
@@ -31,16 +32,17 @@ class Pins extends React.Component {
   }
 
   componentDidMount () {
-    const { layer, map } = this.props
+    const { layer, location, map } = this.props
     const source = layer.getSource()
     const activities = ACTIVITIES.reverse()
+    let activitiesWithinState = 0
     console.log(activities)
 
     setTimeout(() => {
-
       activities.forEach((activity, i) => {
         const { start_latlng: coords } = activity
         console.log('coords', coords.reverse())
+        // console.log(containsCoordinate(location.extent, coords))
         const feature = new olFeature({
           geometry: new olPoint(fromLonLat(coords))
         })
@@ -76,7 +78,7 @@ class Pins extends React.Component {
               })
             )
             if (i === activities.length - 1) {
-              this.setState({ animationDone: true })
+              this.setState({ animationDone: true, activitiesWithinState })
               // add interactions back no that animation is done
               map.addInteraction(new olDoubleClickZoom())
               map.addInteraction(new olMouseWheelZoom())
@@ -103,14 +105,16 @@ class Pins extends React.Component {
   }
 
   render () {
+    const { location } = this.props
+
     return !this.state.animationDone
       ? null
       : (
         <a href='https://www.strava.com/athletes/28790206' target='_blank'>
           <div className='container'>
-            <div className='row'>Strava Activities: <span>{ACTIVITIES.length}</span></div>
+            <div className='row'>Activities Logged: <span>{ACTIVITIES.length}</span></div>
             <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
-            <div className='row'># of Activities in Colorado: <span>0</span></div>
+            <div className='row'># of Activities in {location.state}: <span>0</span></div>
             <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me fix this</em>☝🏻</span></div>
           </div>
         </a>

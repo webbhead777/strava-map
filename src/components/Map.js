@@ -16,14 +16,36 @@ import { fromLonLat } from 'ol/proj'
 import STRAVA_LOGO from '../images/strava-logo.svg'
 import Pins from './Pins'
 
-const DENVER_COORD = fromLonLat([-104.991531, 39.742043])
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
+const locations = [
+  {
+    coords: fromLonLat([-104.991531, 39.742043]),
+    path: 'denver',
+    state: 'Colorado'
+  },
+  {
+    coords: fromLonLat([-105.2705, 40.0150]),
+    path: 'boulder',
+    state: 'Colorado'
+  },
+  {
+    coords: fromLonLat([-115.1398, 36.1699]),
+    path: 'las-vegas',
+    state: 'Nevada'
+  },
+  {
+    coords: fromLonLat([-111.8910, 40.7608]),
+    path: 'salt-lake-city',
+    state: 'Utah'
+  }
+]
 
 class Map extends React.Component {
   constructor () {
     super()
 
-
+    const path = window.location.pathname.substring(1)
+    const location = locations.find(location => location.path === path) || locations[0]
     const baseLayer = new olTileLayer({
       source: new OSM()
     })
@@ -32,7 +54,7 @@ class Map extends React.Component {
     })
     const map = new olMap({
       view: new olView({
-        center: DENVER_COORD,
+        center: location.coords,
         zoom: 11
       }),
       controls: [],
@@ -48,15 +70,16 @@ class Map extends React.Component {
       initialized: false,
       baseLayer,
       layer,
+      location,
       map
     }
   }
 
   componentDidMount () {
-    const { layer, map } = this.state
+    const { layer, location, map } = this.state
     const source = layer.getSource()
     const stravaLogoFeature = new olFeature({
-      geometry: new olPoint(DENVER_COORD)
+      geometry: new olPoint(location.coords)
     })
 
     stravaLogoFeature.setStyle(
@@ -77,7 +100,7 @@ class Map extends React.Component {
 
         // move view to stl
         view.animate({
-          anchor: DENVER_COORD,
+          anchor: location.coords,
           center: STL_COORD,
           easing: easeIn,
           duration: 400,
@@ -94,10 +117,10 @@ class Map extends React.Component {
   }
 
   render () {
-    const { initialized, layer, map } = this.state
+    const { initialized, layer, location, map } = this.state
 
     return !initialized ? null : (
-      <Pins layer={layer} map={map} />
+      <Pins layer={layer} location={location} map={map} />
     )
   }
 }
