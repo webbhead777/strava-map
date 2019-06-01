@@ -17,17 +17,15 @@ import ACTIVITIES from '../data/activities'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
-// this is hacky
-let distanceInMeters = 0
-ACTIVITIES.forEach(({ distance }) => distanceInMeters += distance)
-const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
 
 class Pins extends React.Component {
   constructor () {
     super()
 
     this.state = {
-      animationDone: false
+      activitiesWithinState: 0,
+      animationDone: false,
+      totalDistance: 0
     }
   }
 
@@ -36,16 +34,20 @@ class Pins extends React.Component {
     const source = layer.getSource()
     const activities = ACTIVITIES.reverse()
     let activitiesWithinState = 0
+    let distanceInMeters = 0
     console.log(activities)
 
     setTimeout(() => {
       activities.forEach((activity, i) => {
-        const { start_latlng: coords } = activity
+        const { distance, start_latlng: coords } = activity
         console.log('coords', coords.reverse())
         // console.log(containsCoordinate(location.extent, coords))
         const feature = new olFeature({
           geometry: new olPoint(fromLonLat(coords))
         })
+
+        // addon distance for each activity
+        distanceInMeters += distance
 
         feature.setStyle(
           new olStyle({
@@ -78,7 +80,9 @@ class Pins extends React.Component {
               })
             )
             if (i === activities.length - 1) {
-              this.setState({ animationDone: true, activitiesWithinState })
+              const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
+
+              this.setState({ animationDone: true, activitiesWithinState, totalDistance })
               // add interactions back no that animation is done
               map.addInteraction(new olDoubleClickZoom())
               map.addInteraction(new olMouseWheelZoom())
@@ -106,6 +110,7 @@ class Pins extends React.Component {
 
   render () {
     const { location } = this.props
+    const { activitiesWithinState, totalDistance } = this.state
 
     return !this.state.animationDone
       ? null
@@ -114,7 +119,7 @@ class Pins extends React.Component {
           <div className='container'>
             <div className='row'>Activities Logged: <span>{ACTIVITIES.length}</span></div>
             <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
-            <div className='row'># of Activities in {location.state}: <span>0</span></div>
+            <div className='row'># of Activities in {location.state}: <span>{activitiesWithinState}</span></div>
             <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
           </div>
         </a>
