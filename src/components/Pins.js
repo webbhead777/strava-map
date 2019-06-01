@@ -36,16 +36,19 @@ class Pins extends React.Component {
     let activitiesWithinState = 0
     let distanceInMeters = 0
     console.log(activities)
+    source.addFeature(location.feature)
+    console.log('feature', location.feature)
 
     setTimeout(() => {
       activities.forEach((activity, i) => {
         const { distance, start_latlng: coords } = activity
         console.log('coords', coords.reverse())
-        // console.log(containsCoordinate(location.extent, coords))
         const feature = new olFeature({
           geometry: new olPoint(fromLonLat(coords))
         })
 
+        // coords intersect state geometry
+        if (location.geometry.intersectsCoordinate(coords)) activitiesWithinState++
         // addon distance for each activity
         distanceInMeters += distance
 
@@ -95,6 +98,7 @@ class Pins extends React.Component {
       // animate view to full extent
       setTimeout(() => {
         const view = map.getView()
+        console.log(source)
 
         view.animate({
           anchor: STL_COORD,

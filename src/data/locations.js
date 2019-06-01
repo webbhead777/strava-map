@@ -1,8 +1,15 @@
 import { fromLonLat } from 'ol/proj'
+import GeoJSON from 'ol/format/GeoJSON'
+
+import coloradoExtent from '../boundaries/colorado'
+import nevadaExtent from '../boundaries/nevada'
+
+console.log((new GeoJSON()).readFeatures(coloradoExtent)[0].getGeometry())
 
 const locations = [
   { // default denver to first value in locations array
     coords: fromLonLat([-104.991531, 39.742043]),
+    extent: coloradoExtent,
     path: 'denver',
     state: 'Colorado'
   },
@@ -18,6 +25,9 @@ const locations = [
   },
   {
     coords: fromLonLat([-115.1398, 36.1699]),
+    feature: (new GeoJSON()).readFeatures(nevadaExtent)[0],
+    geometry: (new GeoJSON()).readFeatures(nevadaExtent)[0].getGeometry(),
+    extent: nevadaExtent,
     path: 'las-vegas',
     state: 'Nevada'
   },
