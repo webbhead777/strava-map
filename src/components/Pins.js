@@ -115,7 +115,7 @@ class Pins extends React.Component {
             <div className='row'>Activities Logged: <span>{ACTIVITIES.length}</span></div>
             <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
             <div className='row'># of Activities in {location.state}: <span>0</span></div>
-            <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me fix this</em>☝🏻</span></div>
+            <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
           </div>
         </a>
       )

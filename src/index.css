@@ -25,8 +25,8 @@ code {
 .image {
   position: absolute;
   z-index: 99;
-  width: 150px;
-  bottom: 50px;
+  width: 120px;
+  bottom: 20px;
   right: 20px;
 }
 

@@ -13,15 +13,21 @@ import { easeIn } from 'ol/easing'
 import OSM from 'ol/source/OSM'
 // import { BingMaps, Vector as olVectorSource } from 'ol/source'
 import { fromLonLat } from 'ol/proj'
+import qs from 'qs'
 import STRAVA_LOGO from '../images/strava-logo.svg'
 import Pins from './Pins'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const locations = [
-  {
+  { // default denver to first value in locations array
     coords: fromLonLat([-104.991531, 39.742043]),
     path: 'denver',
     state: 'Colorado'
+  },
+  {
+    coords: fromLonLat([-117.1825, 34.0556]),
+    path: 'redlands',
+    state: 'California'
   },
   {
     coords: fromLonLat([-105.2705, 40.0150]),
@@ -34,18 +40,33 @@ const locations = [
     state: 'Nevada'
   },
   {
+    coords: fromLonLat([-111.4980, 40.6461]),
+    path: 'park-city',
+    state: 'Utah'
+  },
+  {
+    coords: fromLonLat([-111.6585, 40.2338]),
+    path: 'provo',
+    state: 'Utah'
+  },
+  {
     coords: fromLonLat([-111.8910, 40.7608]),
     path: 'salt-lake-city',
     state: 'Utah'
+  },
+  {
+    coords: fromLonLat([-122.3321, 47.6062]),
+    path: 'seattle',
+    state: 'Washington'
   }
 ]
 
 class Map extends React.Component {
   constructor () {
     super()
-
-    const path = window.location.pathname.substring(1)
-    const location = locations.find(location => location.path === path) || locations[0]
+    
+    const { imgUrl, loc } = qs.parse(window.location.search, { ignoreQueryPrefix: true })
+    const location = locations.find(location => location.path === loc) || locations[0]
     const baseLayer = new olTileLayer({
       source: new OSM()
     })
@@ -69,6 +90,7 @@ class Map extends React.Component {
     this.state = {
       initialized: false,
       baseLayer,
+      imgUrl: imgUrl || null,
       layer,
       location,
       map
@@ -76,22 +98,22 @@ class Map extends React.Component {
   }
 
   componentDidMount () {
-    const { layer, location, map } = this.state
+    const { imgUrl, layer, location, map } = this.state
     const source = layer.getSource()
-    const stravaLogoFeature = new olFeature({
+    const locationLogoFeature = new olFeature({
       geometry: new olPoint(location.coords)
     })
 
-    stravaLogoFeature.setStyle(
+    locationLogoFeature.setStyle(
       new olStyle({
         image: new olIcon({
-          src: STRAVA_LOGO
+          src: imgUrl || STRAVA_LOGO
         })
       })
     )
     // add strava logo after tiles load in
     map.once('rendercomplete', () => {
-      setTimeout(() => source.addFeature(stravaLogoFeature), 800)
+      setTimeout(() => source.addFeature(locationLogoFeature), 800)
     })
     source.once('addfeature', (e) => {
       // animation delay
@@ -107,7 +129,7 @@ class Map extends React.Component {
           zoom: 11
         })
         // scale logo down for new extent
-        stravaLogoFeature.getStyle().getImage().setScale(.5)
+        locationLogoFeature.getStyle().getImage().setScale(.5)
         // slightly longer than animation duration
         setTimeout(() => {
           this.setState({ initialized: true })
