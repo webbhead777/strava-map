@@ -12,7 +12,6 @@ import olMouseWheelZoom from 'ol/interaction/MouseWheelZoom'
 import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
-import { containsCoordinate } from 'ol/extent'
 import ACTIVITIES from '../data/activities'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
@@ -36,8 +35,6 @@ class Pins extends React.Component {
     let activitiesWithinState = 0
     let distanceInMeters = 0
     console.log(activities)
-    source.addFeature(location.feature)
-    console.log('feature', location.feature)
 
     setTimeout(() => {
       activities.forEach((activity, i) => {
@@ -47,7 +44,7 @@ class Pins extends React.Component {
           geometry: new olPoint(fromLonLat(coords))
         })
 
-        // coords intersect state geometry
+        // check if activity coords intersect us state geometry
         if (location.geometry.intersectsCoordinate(coords)) activitiesWithinState++
         // addon distance for each activity
         distanceInMeters += distance
