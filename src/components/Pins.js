@@ -118,9 +118,9 @@ class Pins extends React.Component {
       : (
         <a href='https://www.strava.com/athletes/28790206' target='_blank'>
           <div className='container'>
-            <div className='row'>Activities Logged: <span>{ACTIVITIES.length}</span></div>
-            <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
-            <div className='row'># of Activities in {location.state}: <span>{activitiesWithinState}</span></div>
+            <div className='row'>Total activities logged: <span>{ACTIVITIES.length}</span></div>
+            <div className='row'>Total miles logged: <span>{totalDistance}mi</span></div>
+            <div className='row'># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
             <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
           </div>
         </a>
