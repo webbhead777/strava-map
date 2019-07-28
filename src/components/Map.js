@@ -100,7 +100,7 @@ class Map extends React.Component {
   render () {
     const { initialized, layer, location, map } = this.state
 
-    return !initialized ? null : <Pins layer={layer} location={location} map={map} />
+    return initialized ? null : <Pins layer={layer} location={location} map={map} />
   }
 }
 

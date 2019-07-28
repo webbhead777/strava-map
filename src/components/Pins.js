@@ -35,7 +35,6 @@ class Pins extends React.Component {
     const activities = ACTIVITIES.reverse()
     let activitiesWithinState = 0
     let distanceInMeters = 0
-    console.log(activities)
 
     setTimeout(() => {
       activities.forEach((activity, i) => {

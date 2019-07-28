@@ -21,6 +21,12 @@ const locations = [
     state: 'Colorado'
   },
   {
+    coords: fromLonLat([-85.6681, 42.9634,]),
+    geometry: getGeomFromJSON('michigan'),
+    path: 'grand-rapids',
+    state: 'Michigan'
+  },
+  {
     coords: fromLonLat([-115.1398, 36.1699]),
     geometry: getGeomFromJSON('nevada'),
     path: 'las-vegas',
