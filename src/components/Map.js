@@ -15,6 +15,7 @@ import OSM from 'ol/source/OSM'
 import { fromLonLat } from 'ol/proj'
 import qs from 'qs'
 import STRAVA_LOGO from '../images/strava-logo.svg'
+import HOME_IMAGE from '../images/home.png'
 import locations from '../data/locations'
 import Pins from './Pins'
 import State from './State'
@@ -71,6 +72,19 @@ class Map extends React.Component {
         })
       })
     )
+
+    const homeImageFeature = new olFeature({
+      geometry: new olPoint(fromLonLat([-90.253143, 38.617015]))
+    })
+    homeImageFeature.setStyle(
+      new olStyle({
+        image: new olIcon({
+          src: HOME_IMAGE,
+          scale: .18
+        })
+      })
+    )
+
     // add strava logo after tiles load in
     map.once('rendercomplete', () => {
       setTimeout(() => source.addFeature(locationLogoFeature), 800)
@@ -90,6 +104,9 @@ class Map extends React.Component {
         })
         // scale logo down for new extent
         locationLogoFeature.getStyle().getImage().setScale(.5)
+        homeImageFeature.getStyle().getImage().setScale(.08)
+        // add home image
+        source.addFeature(homeImageFeature)
         // slightly longer than animation duration
         setTimeout(() => {
           this.setState({ initialized: true })
