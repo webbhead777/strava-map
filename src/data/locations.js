@@ -1,7 +1,5 @@
 import { fromLonLat } from 'ol/proj'
-import GeoJSON from 'ol/format/GeoJSON'
-
-const getGeomFromJSON = state => (new GeoJSON()).readFeatures(require(`../boundaries/${state.toLowerCase()}`))[0].getGeometry()
+import { getGeomFromJSON } from '../utils'
 
 const locations = [
   { // default denver to first value in locations array

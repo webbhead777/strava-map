@@ -63,9 +63,9 @@ class Pins extends React.Component {
         )
         new Promise((resolve, reject) => {
           setTimeout(() => {
-            // source.addFeature(feature)
+            source.addFeature(feature)
             resolve(feature)
-          }, i * 22)
+          }, i * 1) //22)
         })
         .then(feature => {
           setTimeout(() => {
@@ -119,7 +119,7 @@ class Pins extends React.Component {
       ? null
       : (
         <React.Fragment>
-          <State geometry={location.geometry} layer={layer} map={map} />
+          <State location={location} layer={layer} map={map} />
           <a href='https://www.strava.com/athletes/28790206' target='_blank'>
             <div className='container'>
               <div className='row'>Total activities logged: <span>{ACTIVITIES.length}</span></div>
