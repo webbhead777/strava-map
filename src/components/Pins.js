@@ -100,6 +100,9 @@ class Pins extends React.Component {
       setTimeout(() => {
         const view = map.getView()
 
+        // // remove home image
+        // source.removeFeature(homeImageFeature)
+
         view.animate({
           anchor: STL_COORD,
           center: US_CENTER_COORD,
@@ -107,7 +110,6 @@ class Pins extends React.Component {
           duration: 400,
           zoom: 5
         })
-
       }, 2400)
     }, 1000)
   }

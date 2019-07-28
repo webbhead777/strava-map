@@ -81,7 +81,7 @@ class Map extends React.Component {
       new olStyle({
         image: new olIcon({
           src: HOME_IMAGE,
-          scale: .18
+          scale: .08
         })
       })
     )
@@ -105,7 +105,6 @@ class Map extends React.Component {
         })
         // scale logo down for new extent
         locationLogoFeature.getStyle().getImage().setScale(.05)
-        homeImageFeature.getStyle().getImage().setScale(.08)
         // add home image
         source.addFeature(homeImageFeature)
         // slightly longer than animation duration
