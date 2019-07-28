@@ -14,7 +14,7 @@ import OSM from 'ol/source/OSM'
 // import { BingMaps, Vector as olVectorSource } from 'ol/source'
 import { fromLonLat } from 'ol/proj'
 import qs from 'qs'
-import STRAVA_LOGO from '../images/strava-logo.svg'
+import PIN_IMAGE from '../images/pin.png'
 import HOME_IMAGE from '../images/home.png'
 import locations from '../data/locations'
 import Pins from './Pins'
@@ -68,7 +68,8 @@ class Map extends React.Component {
     locationLogoFeature.setStyle(
       new olStyle({
         image: new olIcon({
-          src: imgUrl || STRAVA_LOGO
+          src: imgUrl || PIN_IMAGE,
+          scale: .18
         })
       })
     )
@@ -103,7 +104,7 @@ class Map extends React.Component {
           zoom: 11
         })
         // scale logo down for new extent
-        locationLogoFeature.getStyle().getImage().setScale(.5)
+        locationLogoFeature.getStyle().getImage().setScale(.05)
         homeImageFeature.getStyle().getImage().setScale(.08)
         // add home image
         source.addFeature(homeImageFeature)
