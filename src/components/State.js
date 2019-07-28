@@ -11,7 +11,7 @@ import { getBoundaryFromState, getGeomFromJSON } from '../utils'
 const State = props => {
   const { layer, location,  location: { geometry }, map } = props
   const source = layer.getSource()
-  const coords = getBoundaryFromState(location.state).geometry.coordinates.map(coord => fromLonLat(coord))
+  const coords = getBoundaryFromState(location.state).geometry.coordinates.map(coord => coord.map(c => fromLonLat(c)))
   console.log(getBoundaryFromState(location.state), coords)
   const feature = new olFeature({ geometry: new olPolygon(coords) })
 
