@@ -17,6 +17,7 @@ import qs from 'qs'
 import STRAVA_LOGO from '../images/strava-logo.svg'
 import locations from '../data/locations'
 import Pins from './Pins'
+import State from './State'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 
@@ -100,7 +101,14 @@ class Map extends React.Component {
   render () {
     const { initialized, layer, location, map } = this.state
 
-    return !initialized ? null : <Pins layer={layer} location={location} map={map} />
+    return !initialized
+      ? null
+      :  (
+        <React.Fragment>
+          <State location={location} layer={layer} map={map} />
+          <Pins layer={layer} location={location} map={map} />
+        </React.Fragment>
+      )
   }
 }
 

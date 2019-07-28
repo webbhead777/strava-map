@@ -11,7 +11,6 @@ import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
-import State from './State'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
@@ -23,6 +22,7 @@ class Pins extends React.Component {
     this.state = {
       activitiesWithinState: 0,
       animationDone: false,
+      totalActivities: 0,
       totalDistance: 0
     }
   }
@@ -33,6 +33,7 @@ class Pins extends React.Component {
     const activities = ACTIVITIES.reverse()
     let activitiesWithinState = 0
     let distanceInMeters = 0
+    let totalActivities = 0
 
     setTimeout(() => {
       activities.forEach((activity, i) => {
@@ -41,11 +42,6 @@ class Pins extends React.Component {
         const feature = new olFeature({
           geometry: new olPoint(fromLonLat(coords))
         })
-
-        // check if activity coords intersect us state geometry
-        if (location.geometry.intersectsCoordinate(coords)) activitiesWithinState++
-        // addon distance for each activity
-        distanceInMeters += distance
 
         feature.setStyle(
           new olStyle({
@@ -77,10 +73,20 @@ class Pins extends React.Component {
                 })
               })
             )
-            if (i === activities.length - 1) {
-              const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
+            const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
 
-              this.setState({ animationDone: true, activitiesWithinState, totalDistance })
+            // check if activity coords intersect us state geometry
+            if (location.geometry.intersectsCoordinate(coords)) activitiesWithinState++
+            // increment total
+            totalActivities++
+            // addon distance for each activity
+            distanceInMeters += distance
+
+            this.setState({ activitiesWithinState, totalActivities, totalDistance })
+
+            // only on last animation
+            if (i === activities.length - 1) {
+              this.setState({ animationDone: true })
               // add interactions back no that animation is done
               map.addInteraction(new olDoubleClickZoom())
               map.addInteraction(new olMouseWheelZoom())
@@ -108,23 +114,20 @@ class Pins extends React.Component {
 
   render () {
     const { layer, location, map } = this.props
-    const { activitiesWithinState, totalDistance } = this.state
+    const { activitiesWithinState, totalActivities, totalDistance } = this.state
 
-    return !this.state.animationDone
-      ? null
-      : (
-        <React.Fragment>
-          <State location={location} layer={layer} map={map} />
-          <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
-            <div className='container'>
-              <div className='row'>Total activities logged: <span>{ACTIVITIES.length}</span></div>
-              <div className='row'>Total miles logged: <span>{totalDistance}mi</span></div>
-              <div className='row'># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
-              <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
-            </div>
-          </a>
-        </React.Fragment>
-      )
+    return (
+      <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
+        <div className='container'>
+          <div className='row'>Total activities logged: <span>{totalActivities}</span></div>
+          <div className='row'>Total miles logged: <span>{totalDistance}mi</span></div>
+          <div className='row'># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
+          {this.state.animationDone &&
+            <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
+          }
+        </div>
+      </a>
+    )
   }
 }
 
