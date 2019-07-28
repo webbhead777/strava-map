@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div>
         <Map />
-        <img className='image' src={LOGO} />
+        <img className='image' src={LOGO} alt='powered by Strava' />
       </div>
     )
   }

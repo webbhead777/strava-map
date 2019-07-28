@@ -1,9 +1,7 @@
 import React from  'react'
-import olView from 'ol/View'
 import olFeature from 'ol/Feature'
 import olPoint from 'ol/geom/Point'
 import olStyle from 'ol/style/Style'
-import olIcon from 'ol/style/Icon'
 import olCircleStyle from 'ol/style/Circle'
 import olFill from 'ol/style/Fill'
 import olStroke from 'ol/style/Stroke'
@@ -64,7 +62,7 @@ class Pins extends React.Component {
           setTimeout(() => {
             source.addFeature(feature)
             resolve(feature)
-          }, i * 1) //22)
+          }, i * 20)
         })
         .then(feature => {
           setTimeout(() => {
@@ -95,7 +93,6 @@ class Pins extends React.Component {
       // animate view to full extent
       setTimeout(() => {
         const view = map.getView()
-        console.log(source)
 
         view.animate({
           anchor: STL_COORD,
@@ -112,14 +109,13 @@ class Pins extends React.Component {
   render () {
     const { layer, location, map } = this.props
     const { activitiesWithinState, totalDistance } = this.state
-    // debugger;
 
     return !this.state.animationDone
       ? null
       : (
         <React.Fragment>
           <State location={location} layer={layer} map={map} />
-          <a href='https://www.strava.com/athletes/28790206' target='_blank'>
+          <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
             <div className='container'>
               <div className='row'>Total activities logged: <span>{ACTIVITIES.length}</span></div>
               <div className='row'>Total miles logged: <span>{totalDistance}mi</span></div>

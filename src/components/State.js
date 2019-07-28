@@ -1,4 +1,3 @@
-import React from 'react'
 import olFeature from 'ol/Feature'
 import olPolygon from 'ol/geom/Polygon'
 import olMultiPolygon from 'ol/geom/MultiPolygon'
@@ -7,14 +6,18 @@ import olFill from 'ol/style/Fill'
 import olStroke from 'ol/style/Stroke'
 import { fromLonLat } from 'ol/proj'
 
-import { getBoundaryFromState, getGeomFromJSON } from '../utils'
+import { getBoundaryFromState } from '../utils'
 
 const State = props => {
   const { layer, location, map } = props
   const source = layer.getSource()
   const { geometry } = getBoundaryFromState(location.state)
-  const coords = geometry.type === 'MultiPolygon' ? geometry.coordinates.map(c => c.map(coord => coord.map(c => fromLonLat(c)))) : geometry.coordinates.map(coord => coord.map(c => fromLonLat(c)))
-  const olGeom = geometry.type === 'MultiPolygon' ? new olMultiPolygon(coords) : new olPolygon(coords)
+  const coords = geometry.type === 'MultiPolygon'
+    ? geometry.coordinates.map(c => c.map(c => c.map(c => fromLonLat(c))))
+    : geometry.coordinates.map(c => c.map(c => fromLonLat(c)))
+  const olGeom = geometry.type === 'MultiPolygon'
+    ? new olMultiPolygon(coords)
+    : new olPolygon(coords)
   const feature = new olFeature({ geometry: olGeom })
 
   feature.setStyle(
