@@ -13,6 +13,7 @@ import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
+import State from './State'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
@@ -62,7 +63,7 @@ class Pins extends React.Component {
         )
         new Promise((resolve, reject) => {
           setTimeout(() => {
-            source.addFeature(feature)
+            // source.addFeature(feature)
             resolve(feature)
           }, i * 22)
         })
@@ -110,20 +111,24 @@ class Pins extends React.Component {
   }
 
   render () {
-    const { location } = this.props
+    const { layer, location, map } = this.props
     const { activitiesWithinState, totalDistance } = this.state
+    // debugger;
 
     return !this.state.animationDone
       ? null
       : (
-        <a href='https://www.strava.com/athletes/28790206' target='_blank'>
-          <div className='container'>
-            <div className='row'>Total activities logged: <span>{ACTIVITIES.length}</span></div>
-            <div className='row'>Total miles logged: <span>{totalDistance}mi</span></div>
-            <div className='row'># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
-            <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
-          </div>
-        </a>
+        <React.Fragment>
+          <State geometry={location.geometry} layer={layer} map={map} />
+          <a href='https://www.strava.com/athletes/28790206' target='_blank'>
+            <div className='container'>
+              <div className='row'>Total activities logged: <span>{ACTIVITIES.length}</span></div>
+              <div className='row'>Total miles logged: <span>{totalDistance}mi</span></div>
+              <div className='row'># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
+              <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
+            </div>
+          </a>
+        </React.Fragment>
       )
   }
 }
