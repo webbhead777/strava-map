@@ -50,8 +50,10 @@ class Pins extends React.Component {
               fill: new olFill({ color: '#f8ab87' }),
               stroke: new olStroke({
                 color: '#fc4c02', width: 4
-              })
-            })
+              }),
+              opacity: .2
+            }),
+            opacity: .2
           })
         )
         new Promise((resolve, reject) => {
@@ -69,8 +71,10 @@ class Pins extends React.Component {
                   fill: new olFill({ color: '#fc4c02' }),
                   stroke: new olStroke({
                     color: '#fc4c02', width: 2
-                  })
-                })
+                  }),
+                  opacity: .2
+                }),
+                opacity: .2
               })
             )
             const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile

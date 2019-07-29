@@ -14,8 +14,8 @@ import OSM from 'ol/source/OSM'
 // import { BingMaps, Vector as olVectorSource } from 'ol/source'
 import { fromLonLat } from 'ol/proj'
 import qs from 'qs'
+import PERSON_IMAGE from '../images/person.jpg'
 import PIN_IMAGE from '../images/pin.png'
-import HOME_IMAGE from '../images/home.png'
 import locations from '../data/locations'
 import Pins from './Pins'
 import State from './State'
@@ -80,8 +80,8 @@ class Map extends React.Component {
     homeImageFeature.setStyle(
       new olStyle({
         image: new olIcon({
-          src: HOME_IMAGE,
-          scale: .08
+          src: PERSON_IMAGE,
+          scale: .25
         })
       })
     )
