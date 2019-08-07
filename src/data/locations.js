@@ -33,6 +33,12 @@ const locations = [
     state: 'Nevada'
   },
   {
+    coords: fromLonLat([-122.6750, 45.5051]),
+    geometry: getGeomFromJSON('oregon'),
+    path: 'portland',
+    state: 'Oregon'
+  },
+  {
     coords: fromLonLat([-111.4980, 40.6461]),
     geometry: getGeomFromJSON('utah'),
     path: 'park-city',

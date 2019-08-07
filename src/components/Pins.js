@@ -11,6 +11,9 @@ import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
+import PERSON_IMAGE from '../images/person.png'
+import olIcon from 'ol/style/Icon'
+console.log(ACTIVITIES)
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
@@ -45,15 +48,17 @@ class Pins extends React.Component {
 
         feature.setStyle(
           new olStyle({
+            // image: new olIcon({
+            //   src: PERSON_IMAGE,
+            //   scale: .2
+            // })
             image: new olCircleStyle({
               radius: 10,
               fill: new olFill({ color: '#f8ab87' }),
               stroke: new olStroke({
                 color: '#fc4c02', width: 4
-              }),
-              opacity: .2
-            }),
-            opacity: .2
+              })
+            })
           })
         )
         new Promise((resolve, reject) => {
@@ -66,15 +71,17 @@ class Pins extends React.Component {
           setTimeout(() => {
             feature.setStyle(
               new olStyle({
+                // image: new olIcon({
+                //   src: PERSON_IMAGE,
+                //   scale: .15
+                // })
                 image: new olCircleStyle({
                   radius: 5,
                   fill: new olFill({ color: '#fc4c02' }),
                   stroke: new olStroke({
                     color: '#fc4c02', width: 2
-                  }),
-                  opacity: .2
-                }),
-                opacity: .2
+                  })
+                })
               })
             )
             const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
@@ -96,7 +103,7 @@ class Pins extends React.Component {
               map.addInteraction(new olMouseWheelZoom())
               map.addInteraction(new olDragPan())
             }
-          }, 600)
+          }, 100)
         })
       })
 
