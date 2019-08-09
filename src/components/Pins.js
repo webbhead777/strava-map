@@ -12,6 +12,7 @@ import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
 import PERSON_IMAGE from '../images/person.png'
+import LOGO from '../images/powered_by_strava.png'
 import olIcon from 'ol/style/Icon'
 console.log(ACTIVITIES)
 
@@ -36,11 +37,12 @@ class Pins extends React.Component {
     const activities = ACTIVITIES.reverse()
     let activitiesWithinState = 0
     let distanceInMeters = 0
+    let numOfCommutes = 0
     let totalActivities = 0
 
     setTimeout(() => {
       activities.forEach((activity, i) => {
-        const { distance, start_latlng: coords } = activity
+        const { commute, distance, start_latlng: coords } = activity
         console.log('coords', coords.reverse())
         const feature = new olFeature({
           geometry: new olPoint(fromLonLat(coords))
@@ -48,10 +50,6 @@ class Pins extends React.Component {
 
         feature.setStyle(
           new olStyle({
-            // image: new olIcon({
-            //   src: PERSON_IMAGE,
-            //   scale: .2
-            // })
             image: new olCircleStyle({
               radius: 10,
               fill: new olFill({ color: '#f8ab87' }),
@@ -69,31 +67,31 @@ class Pins extends React.Component {
         })
         .then(feature => {
           setTimeout(() => {
-            feature.setStyle(
-              new olStyle({
-                // image: new olIcon({
-                //   src: PERSON_IMAGE,
-                //   scale: .15
-                // })
-                image: new olCircleStyle({
-                  radius: 5,
-                  fill: new olFill({ color: '#fc4c02' }),
-                  stroke: new olStroke({
-                    color: '#fc4c02', width: 2
-                  })
-                })
-              })
-            )
             const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
+            const activityIsWithinState = !!location.geometry.intersectsCoordinate(coords)
 
             // check if activity coords intersect us state geometry
-            if (location.geometry.intersectsCoordinate(coords)) activitiesWithinState++
+            if (activityIsWithinState) activitiesWithinState++
             // increment total
             totalActivities++
             // addon distance for each activity
             distanceInMeters += distance
+            // check if commute
+            if (commute) numOfCommutes++
 
-            this.setState({ activitiesWithinState, totalActivities, totalDistance })
+            this.setState({ activitiesWithinState, numOfCommutes, totalActivities, totalDistance })
+            feature.setStyle(
+              new olStyle({
+                image: new olCircleStyle({
+                  radius: 5,
+                  fill: new olFill({ color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}` }),
+                  stroke: new olStroke({
+                    color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}`,
+                    width: 2
+                  })
+                })
+              })
+            )
 
             // only on last animation
             if (i === activities.length - 1) {
@@ -127,17 +125,18 @@ class Pins extends React.Component {
 
   render () {
     const { layer, location, map } = this.props
-    const { activitiesWithinState, totalActivities, totalDistance } = this.state
+    const { activitiesWithinState, numOfCommutes, totalActivities, totalDistance } = this.state
 
     return (
       <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
         <div className='container'>
-          <div className='row'>Total activities logged: <span>{totalActivities}</span></div>
-          <div className='row'>Total miles logged: <span>{totalDistance}mi</span></div>
-          <div className='row'># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
+          <div className='row' style={{color:'#fc4c02'}}>total activities logged: <span>{totalActivities}</span></div>
+          <div className='row'>bike commutes: <span>🚲{numOfCommutes}</span></div>
+          <div className='row' style={{color:'#0074D9'}}># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
           {this.state.animationDone &&
             <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
           }
+          <img className='image' src={LOGO} alt='powered by Strava' />
         </div>
       </a>
     )

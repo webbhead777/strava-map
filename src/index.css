@@ -20,14 +20,13 @@ code {
 #map {
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .image {
-  position: absolute;
-  z-index: 99;
-  width: 120px;
-  bottom: 20px;
-  right: 20px;
+  float: right;
+  width: 96px;
+  padding-top: 18px;
 }
 
 .container {
@@ -37,11 +36,11 @@ code {
   min-height: 80px;
   min-width: 220px;
   border-radius: 4px;
-  padding: 10px;
+  padding: 15px;
   bottom: 50px;
-  left: 50px;
+  right: 50px;
   color: #f1f1f1;
-  background: #a7a7a7;
+  background: #1b1717c4;
 }
 
 .row {
