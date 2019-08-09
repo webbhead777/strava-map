@@ -109,9 +109,6 @@ class Pins extends React.Component {
       setTimeout(() => {
         const view = map.getView()
 
-        // // remove home image
-        // source.removeFeature(homeImageFeature)
-
         view.animate({
           anchor: STL_COORD,
           center: US_CENTER_COORD,
@@ -131,7 +128,7 @@ class Pins extends React.Component {
       <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
         <div className='container'>
           <div className='row' style={{color:'#fc4c02'}}>total activities logged: <span>{totalActivities}</span></div>
-          <div className='row'>bike commutes: <span>🚲{numOfCommutes}</span></div>
+          {/*<div className='row'>bike commutes: <span>🚲{numOfCommutes}</span></div>*/}
           <div className='row' style={{color:'#0074D9'}}># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
           {this.state.animationDone &&
             <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>

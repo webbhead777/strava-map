@@ -20,6 +20,10 @@ import locations from '../data/locations'
 import Pins from './Pins'
 import State from './State'
 
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js'
+import {Cluster, Vector as VectorSource} from 'ol/source.js'
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js'
+
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 
 class Map extends React.Component {
@@ -28,11 +32,41 @@ class Map extends React.Component {
 
     const { imgUrl, loc } = qs.parse(window.location.search, { ignoreQueryPrefix: true })
     const location = locations.find(location => location.path === loc) || locations[0]
-    const baseLayer = new olTileLayer({
-      source: new OSM()
+    const baseLayer = new olTileLayer({ source: new OSM() })
+    const source = new olVectorSource()
+    const layer = new olVectorLayer({ source })
+    const distance = document.getElementById('distance')
+    const clusterSource = new Cluster({
+      source: source
     })
-    const layer = new olVectorLayer({
-      source: new olVectorSource()
+    const styleCache = {} // this makes prev size computes more efficient
+    const clusterLayer = new VectorLayer({
+      source: clusterSource,
+      style: feature => {
+        var size = feature.get('features').length;
+        var style = styleCache[size];
+        if (!style) {
+          style = new Style({
+            image: new CircleStyle({
+              radius: 10,
+              stroke: new Stroke({
+                color: '#fff'
+              }),
+              fill: new Fill({
+                color: '#3399CC'
+              })
+            }),
+            text: new Text({
+              text: size.toString(),
+              fill: new Fill({
+                color: '#fff'
+              })
+            })
+          });
+          styleCache[size] = style;
+        }
+        return style;
+      }
     })
     const map = new olMap({
       view: new olView({
@@ -49,9 +83,10 @@ class Map extends React.Component {
     })
 
     this.state = {
-      initialized: false,
       baseLayer,
+      clusterLayer,
       imgUrl: imgUrl || null,
+      initialized: false,
       layer,
       location,
       map
@@ -110,7 +145,9 @@ class Map extends React.Component {
         // slightly longer than animation duration
         setTimeout(() => {
           this.setState({ initialized: true })
-        }, 1000)
+          // remove home image
+          source.removeFeature(homeImageFeature)
+        }, 2000)
       }, 800)
     })
   }
