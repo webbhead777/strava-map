@@ -14,6 +14,7 @@ import ACTIVITIES from '../data/activities'
 import PERSON_IMAGE from '../images/person.png'
 import LOGO from '../images/powered_by_strava.png'
 import olIcon from 'ol/style/Icon'
+import Profile from './Profile'
 console.log(ACTIVITIES)
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
@@ -83,11 +84,11 @@ class Pins extends React.Component {
             feature.setStyle(
               new olStyle({
                 image: new olCircleStyle({
-                  radius: 5,
-                  fill: new olFill({ color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}` }),
+                  radius: `${activityIsWithinState ? 10 : 5}`,
+                  fill: new olFill({ color: '#fc4c02' }),
                   stroke: new olStroke({
                     color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}`,
-                    width: 2
+                    width: 4
                   })
                 })
               })
@@ -125,17 +126,7 @@ class Pins extends React.Component {
     const { activitiesWithinState, numOfCommutes, totalActivities, totalDistance } = this.state
 
     return (
-      <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
-        <div className='container'>
-          <div className='row' style={{color:'#fc4c02'}}>total activities logged: <span>{totalActivities}</span></div>
-          {/*<div className='row'>bike commutes: <span>🚲{numOfCommutes}</span></div>*/}
-          <div className='row' style={{color:'#0074D9'}}># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
-          {this.state.animationDone &&
-            <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me improve this </em>☝🏻</span></div>
-          }
-          <img className='image' src={LOGO} alt='powered by Strava' />
-        </div>
-      </a>
+      <Profile {...this.props} {...this.state} />
     )
   }
 }
