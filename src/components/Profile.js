@@ -15,11 +15,11 @@ class Profile extends React.Component {
             <h2 className='sub-title'>Software Engineer</h2>
           </div>
         </div>
-        <div className='row' style={{color:'#fc4c02', border: 'none'}}>
+        <div className='row' style={{border: 'none'}}>
           Strava activities logged: <span>{totalActivities}</span>
         </div>
         <div className='row'>🚲work commutes  🚲<span>{numOfCommutes}</span></div>
-        <div className='row' style={{color:'#0074D9'}}>activities in {location.state}: <span>{activitiesWithinState}</span></div>
+        <div className='row'>activities in {location.state}: <span>{activitiesWithinState}</span></div>
         <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
           <img className='image' src={STRAVA_LOGO} alt='powered by Strava' />
         </a>

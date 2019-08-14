@@ -27,6 +27,7 @@ class Pins extends React.Component {
     this.state = {
       activitiesWithinState: 0,
       animationDone: false,
+      numOfCommutes: 0,
       totalActivities: 0,
       totalDistance: 0
     }
@@ -84,8 +85,8 @@ class Pins extends React.Component {
             feature.setStyle(
               new olStyle({
                 image: new olCircleStyle({
-                  radius: `${activityIsWithinState ? 10 : 5}`,
-                  fill: new olFill({ color: '#fc4c02' }),
+                  radius: 5,
+                  fill: new olFill({ color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}` }),
                   stroke: new olStroke({
                     color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}`,
                     width: 4
