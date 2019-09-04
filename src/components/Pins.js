@@ -97,9 +97,9 @@ class Pins extends React.Component {
 
                   feature.setStyle(
                     new olStyle({
-                      fill: new olFill({ color: '#8d99ff8a' }),
+                      fill: new olFill({ color: '#ffe37336' }),
                       stroke: new olStroke({
-                        color: '#8d99ff', width: 2
+                        color: '#ffe373', width: 2
                       }),
                       opacity: .6
                     })

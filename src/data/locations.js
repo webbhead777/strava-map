@@ -61,6 +61,18 @@ const locations = [
     geometry: getGeomFromJSON('washington'),
     path: 'seattle',
     state: 'Washington'
+  },
+  {
+    geometry: getGeomFromJSON('illinois'),
+    state: 'Illinois'
+  },
+  {
+    geometry: getGeomFromJSON('kentucky'),
+    state: 'Kentucky'
+  },
+  {
+    geometry: getGeomFromJSON('missouri'),
+    state: 'Missouri'
   }
 ]
 
