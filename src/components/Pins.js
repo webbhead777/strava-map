@@ -11,11 +11,16 @@ import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
+import LOCATIONS from '../data/locations'
 import PERSON_IMAGE from '../images/person.png'
 import LOGO from '../images/powered_by_strava.png'
 import olIcon from 'ol/style/Icon'
 import Profile from './Profile'
-console.log(ACTIVITIES)
+
+import olPolygon from 'ol/geom/Polygon'
+import olMultiPolygon from 'ol/geom/MultiPolygon'
+import { getBoundaryFromState } from '../utils'
+console.log(ACTIVITIES, LOCATIONS)
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
@@ -37,6 +42,7 @@ class Pins extends React.Component {
     const { layer, location, map } = this.props
     const source = layer.getSource()
     const activities = ACTIVITIES.reverse()
+    const highlightedStates = []
     let activitiesWithinState = 0
     let distanceInMeters = 0
     let numOfCommutes = 0
@@ -73,7 +79,36 @@ class Pins extends React.Component {
             const activityIsWithinState = !!location.geometry.intersectsCoordinate(coords)
 
             // check if activity coords intersect us state geometry
-            if (activityIsWithinState) activitiesWithinState++
+            if (activityIsWithinState) {
+              activitiesWithinState++
+            } else {
+              // check to see which activity the state intersects
+              LOCATIONS.forEach(loc => {
+                if (!highlightedStates.includes(loc.state) && !!loc.geometry.intersectsCoordinate(coords)) {
+                  const source = layer.getSource()
+                  const { geometry } = getBoundaryFromState(loc.state)
+                  const coords = geometry.type === 'MultiPolygon'
+                    ? geometry.coordinates.map(c => c.map(c => c.map(c => fromLonLat(c))))
+                    : geometry.coordinates.map(c => c.map(c => fromLonLat(c)))
+                  const olGeom = geometry.type === 'MultiPolygon'
+                    ? new olMultiPolygon(coords)
+                    : new olPolygon(coords)
+                  const feature = new olFeature({ geometry: olGeom })
+
+                  feature.setStyle(
+                    new olStyle({
+                      fill: new olFill({ color: '#8d99ff8a' }),
+                      stroke: new olStroke({
+                        color: '#8d99ff', width: 2
+                      }),
+                      opacity: .6
+                    })
+                  )
+                  source.addFeature(feature)
+                  highlightedStates.push(loc.state)
+                }
+              })
+            }
             // increment total
             totalActivities++
             // addon distance for each activity
@@ -86,9 +121,9 @@ class Pins extends React.Component {
               new olStyle({
                 image: new olCircleStyle({
                   radius: 5,
-                  fill: new olFill({ color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}` }),
+                  fill: new olFill({ color: '#fc4c02' }),
                   stroke: new olStroke({
-                    color: `${activityIsWithinState ? '#0074D9' : '#fc4c02'}`,
+                    color: '#fc4c02',
                     width: 4
                   })
                 })
