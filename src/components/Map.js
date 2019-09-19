@@ -25,7 +25,6 @@ import {Cluster, Vector as VectorSource} from 'ol/source.js'
 import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js'
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
-const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
 
 class Map extends React.Component {
   constructor () {
@@ -71,11 +70,8 @@ class Map extends React.Component {
     })
     const map = new olMap({
       view: new olView({
-        anchor: STL_COORD,
-        center: US_CENTER_COORD,
-        easing: easeIn,
-        duration: 400,
-        zoom: 5
+        center: location.coords,
+        zoom: 11
       }),
       controls: [],
       interactions: [], // remove interactions to add back after animation
@@ -136,11 +132,11 @@ class Map extends React.Component {
 
         // move view to stl
         view.animate({
-          anchor: STL_COORD,
-          center: US_CENTER_COORD,
+          anchor: location.coords,
+          center: STL_COORD,
           easing: easeIn,
           duration: 400,
-          zoom: 5
+          zoom: 11
         })
         // scale logo down for new extent
         locationLogoFeature.getStyle().getImage().setScale(.05)

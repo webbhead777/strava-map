@@ -63,15 +63,21 @@ const locations = [
     state: 'Washington'
   },
   {
+    coords: fromLonLat([-87.6298, 41.8781]),
     geometry: getGeomFromJSON('illinois'),
+    path: 'chicago',
     state: 'Illinois'
   },
   {
+    coords: fromLonLat([-84.5037, 38.0406]),
     geometry: getGeomFromJSON('kentucky'),
+    path: 'lexington',
     state: 'Kentucky'
   },
   {
+    coords: fromLonLat([-90.1994, 38.6270]),
     geometry: getGeomFromJSON('missouri'),
+    path: 'st-louis',
     state: 'Missouri'
   }
 ]
