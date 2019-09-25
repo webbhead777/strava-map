@@ -20,7 +20,7 @@ import Profile from './Profile'
 import olPolygon from 'ol/geom/Polygon'
 import olMultiPolygon from 'ol/geom/MultiPolygon'
 import { getBoundaryFromState } from '../utils'
-console.log(ACTIVITIES, LOCATIONS)
+console.log(ACTIVITIES)
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])

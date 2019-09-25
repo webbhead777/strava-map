@@ -99,15 +99,24 @@ class Map extends React.Component {
     const locationLogoFeature = new olFeature({
       geometry: new olPoint(location.coords)
     })
+    const src = imgUrl || PIN_IMAGE
+    const imageElem = new Image()
+    let zoomedOutScale
+    const createOlImage = () => {
+      const scale = 380 / imageElem.naturalWidth
+      zoomedOutScale = 200 / imageElem.naturalWidth
 
-    locationLogoFeature.setStyle(
-      new olStyle({
-        image: new olIcon({
-          src: imgUrl || PIN_IMAGE,
-          scale: .18
+      locationLogoFeature.setStyle(
+        new olStyle({
+          image: new olIcon({
+            src,
+            scale
+          })
         })
-      })
-    )
+      )
+    }
+    imageElem.onload = createOlImage
+    imageElem.src = src
 
     const homeImageFeature = new olFeature({
       geometry: new olPoint(fromLonLat([-90.253143, 38.617015]))
@@ -139,7 +148,7 @@ class Map extends React.Component {
           zoom: 11
         })
         // scale logo down for new extent
-        locationLogoFeature.getStyle().getImage().setScale(.05)
+        locationLogoFeature.getStyle().getImage().setScale(zoomedOutScale)
         // add home image
         source.addFeature(homeImageFeature)
         // slightly longer than animation duration
