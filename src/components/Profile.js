@@ -4,7 +4,7 @@ import STRAVA_LOGO from '../images/powered_by_strava.png'
 
 class Profile extends React.Component {
   render () {
-    const { activitiesWithinState, layer, location, map, numOfCommutes, totalActivities, totalDistance } = this.props
+    const { activitiesWithinState, animationDone, layer, location, map, numOfCommutes, totalActivities, totalActivitiesFinal, totalDistance } = this.props
 
     return (
       <div className='container'>
@@ -16,7 +16,7 @@ class Profile extends React.Component {
           </div>
         </div>
         <div className='row' style={{border: 'none'}}>
-          Strava activities logged: <span>{totalActivities}</span>
+          Strava activities logged: <span>{totalActivities} {!animationDone && `out of ${totalActivitiesFinal}`}</span>
         </div>
         <div className='row'>🚲work commutes  🚲<span>{numOfCommutes}</span></div>
         <div className='row'>activities in {location.state}: <span>{activitiesWithinState}</span></div>

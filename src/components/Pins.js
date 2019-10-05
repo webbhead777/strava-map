@@ -34,6 +34,7 @@ class Pins extends React.Component {
       animationDone: false,
       numOfCommutes: 0,
       totalActivities: 0,
+      totalActivitiesFinal: ACTIVITIES.length,
       totalDistance: 0
     }
   }
