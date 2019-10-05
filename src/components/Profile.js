@@ -1,5 +1,7 @@
 import React from 'react'
 import PERSON_IMAGE from '../images/person.png'
+import LINKEDIN_IMAGE from '../images/linkedin.png'
+import GITHUB_IMAGE from '../images/github.png'
 import STRAVA_LOGO from '../images/powered_by_strava.png'
 
 class Profile extends React.Component {
@@ -13,6 +15,14 @@ class Profile extends React.Component {
           <div className='title-box'>
             <h1 className='title'>Jake Webb Stäzrad</h1>
             <h2 className='sub-title'>Software Engineer</h2>
+            <span>
+              <a href='https://github.com/webbhead777' target='_blank' rel='noopener noreferrer'>
+                <img className='image-logo' src={LINKEDIN_IMAGE} alt='LinkedIn' />
+              </a>
+              <a href='https://www.linkedin.com/in/jakewebbsite/' target='_blank' rel='noopener noreferrer'>
+                <img className='image-logo' src={GITHUB_IMAGE} alt='Github' />
+              </a>
+            </span>
           </div>
         </div>
         <div className='row' style={{border: 'none'}}>

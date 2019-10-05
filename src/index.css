@@ -43,6 +43,7 @@ body {
 
 .header {
   height: 80px;
+  margin-bottom: 8px;
 }
 
 .avatar {
@@ -66,6 +67,11 @@ body {
 .sub-title {
   font-weight: normal;
   margin-top: 0px;
+}
+
+.image-logo {
+  height: 12px;
+  margin-right: 6px;
 }
 
 .row {

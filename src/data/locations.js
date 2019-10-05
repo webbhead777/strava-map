@@ -15,6 +15,12 @@ const locations = [
     state: 'California'
   },
   {
+    coords: fromLonLat([-122.4194, 37.7749]),
+    geometry: getGeomFromJSON('california'),
+    path: 'san-francisco',
+    state: 'California'
+  },
+  {
     coords: fromLonLat([-105.2705, 40.0150]),
     geometry: getGeomFromJSON('colorado'),
     path: 'boulder',
