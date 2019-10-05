@@ -33,11 +33,11 @@ class Map extends React.Component {
     const { imgUrl, loc } = qs.parse(window.location.search, { ignoreQueryPrefix: true })
     const location = locations.find(location => location.path === loc) || locations[0]
     const baseLayer = new olTileLayer({ source: new OSM() })
-    const source = new olVectorSource()
-    const layer = new olVectorLayer({ source })
+    const pinsLayer = new olVectorLayer({ source: new olVectorSource() })
+    const stateLayer = new olVectorLayer({ source: new olVectorSource() })
     const distance = document.getElementById('distance')
     const clusterSource = new Cluster({
-      source: source
+      source: new olVectorSource()
     })
     const styleCache = {} // this makes prev size computes more efficient
     const clusterLayer = new VectorLayer({
@@ -77,7 +77,9 @@ class Map extends React.Component {
       interactions: [], // remove interactions to add back after animation
       layers: [
         baseLayer,
-        layer
+        pinsLayer,
+        clusterLayer,
+        stateLayer
       ],
       target: 'map'
     })
@@ -87,15 +89,16 @@ class Map extends React.Component {
       clusterLayer,
       imgUrl: imgUrl || null,
       initialized: false,
-      layer,
+      pinsLayer,
+      stateLayer,
       location,
       map
     }
   }
 
   componentDidMount () {
-    const { imgUrl, layer, location, map } = this.state
-    const source = layer.getSource()
+    const { imgUrl, stateLayer, location, map } = this.state
+    const source = stateLayer.getSource()
     const locationLogoFeature = new olFeature({
       geometry: new olPoint(location.coords)
     })
@@ -103,8 +106,9 @@ class Map extends React.Component {
     const imageElem = new Image()
     let zoomedOutScale
     const createOlImage = () => {
-      const scale = 380 / imageElem.naturalWidth
-      zoomedOutScale = 200 / imageElem.naturalWidth
+      const longestPlane = imageElem.naturalWidth > imageElem.naturalHeight ? imageElem.naturalWidth : imageElem.naturalHeight
+      const scale = 380 / longestPlane
+      zoomedOutScale = 200 / longestPlane
 
       locationLogoFeature.setStyle(
         new olStyle({
@@ -119,7 +123,7 @@ class Map extends React.Component {
     imageElem.src = src
 
     const homeImageFeature = new olFeature({
-      geometry: new olPoint(fromLonLat([-90.253143, 38.617015]))
+      geometry: new olPoint(fromLonLat([-90.253143, 38.617015])) // south city stl
     })
     homeImageFeature.setStyle(
       new olStyle({
@@ -130,7 +134,7 @@ class Map extends React.Component {
       })
     )
 
-    // add strava logo after tiles load in
+    // add location logo after tiles load in
     map.once('rendercomplete', () => {
       setTimeout(() => source.addFeature(locationLogoFeature), 800)
     })
@@ -162,14 +166,14 @@ class Map extends React.Component {
   }
 
   render () {
-    const { initialized, layer, location, map } = this.state
+    const { initialized, pinsLayer, stateLayer, location, map } = this.state
 
     return !initialized
       ? null
       :  (
         <React.Fragment>
-          <State location={location} layer={layer} map={map} />
-          <Pins layer={layer} location={location} map={map} />
+          <State location={location} layer={stateLayer} map={map} />
+          <Pins layer={pinsLayer} location={location} map={map} />
         </React.Fragment>
       )
   }
