@@ -135,9 +135,7 @@ class Map extends React.Component {
     )
 
     // add location logo after tiles load in
-    map.once('rendercomplete', () => {
-      setTimeout(() => source.addFeature(locationLogoFeature), 800)
-    })
+    setTimeout(() => source.addFeature(locationLogoFeature), 2000)
     source.once('addfeature', (e) => {
       // animation delay
       setTimeout(() => {
@@ -161,7 +159,7 @@ class Map extends React.Component {
           // remove home image
           source.removeFeature(homeImageFeature)
         }, 2000)
-      }, 800)
+      }, 1500)
     })
   }
 
