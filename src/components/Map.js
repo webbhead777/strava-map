@@ -107,8 +107,8 @@ class Map extends React.Component {
     let zoomedOutScale
     const createOlImage = () => {
       const longestPlane = imageElem.naturalWidth > imageElem.naturalHeight ? imageElem.naturalWidth : imageElem.naturalHeight
-      const scale = 380 / longestPlane
-      zoomedOutScale = 200 / longestPlane
+      const scale = 260 / longestPlane
+      zoomedOutScale = 120 / longestPlane
 
       locationLogoFeature.setStyle(
         new olStyle({
