@@ -17,10 +17,10 @@ class Profile extends React.Component {
             <h2 className='sub-title'>Software Engineer</h2>
             <span>
               <a href='https://github.com/webbhead777' target='_blank' rel='noopener noreferrer'>
-                <img className='image-logo' src={LINKEDIN_IMAGE} alt='LinkedIn' />
+                <img className='image-logo' src={GITHUB_IMAGE} alt='Github' />
               </a>
               <a href='https://www.linkedin.com/in/jakewebbsite/' target='_blank' rel='noopener noreferrer'>
-                <img className='image-logo' src={GITHUB_IMAGE} alt='Github' />
+                <img className='image-logo' src={LINKEDIN_IMAGE} alt='LinkedIn' />
               </a>
             </span>
           </div>
