@@ -1,12 +1,22 @@
 import React from 'react'
 import PERSON_IMAGE from '../images/person.png'
-import LINKEDIN_IMAGE from '../images/linkedin.png'
-import GITHUB_IMAGE from '../images/github.png'
-import STRAVA_LOGO from '../images/powered_by_strava.png'
+import LINKEDIN_BLACK from '../images/linkedin_black.png'
+import LINKEDIN_COLOR from '../images/linkedin_color.png'
+import GITHUB_BLACK from '../images/github_black.png'
+import GITHUB_COLOR from '../images/github_color.png'
+import STRAVA_COLOR from '../images/powered_by_strava.png'
+import STRAVA_GREY from '../images/powered_by_strava_grey.png'
 
 class Profile extends React.Component {
+  state = {
+    githubSrc: GITHUB_BLACK,
+    linkedinSrc: LINKEDIN_BLACK,
+    stravaSrc: STRAVA_GREY
+  }
+
   render () {
     const { activitiesWithinState, animationDone, layer, location, map, numOfCommutes, totalActivities, totalActivitiesFinal, totalDistance } = this.props
+    const { githubSrc, linkedinSrc, stravaSrc } = this.state
 
     return (
       <div className='container'>
@@ -17,21 +27,34 @@ class Profile extends React.Component {
             <h2 className='sub-title'>Software Engineer</h2>
             <span>
               <a href='https://github.com/webbhead777' target='_blank' rel='noopener noreferrer'>
-                <img className='image-logo' src={GITHUB_IMAGE} alt='Github' />
+                <img className='image-logo' src={githubSrc} alt='Github' style={{ width: '46px', objectFit: 'cover' }}
+                  onMouseEnter={() => this.setState({ githubSrc: GITHUB_COLOR })}
+                  onMouseLeave={() => this.setState({ githubSrc: GITHUB_BLACK })} />
               </a>
               <a href='https://www.linkedin.com/in/jakewebbsite/' target='_blank' rel='noopener noreferrer'>
-                <img className='image-logo' src={LINKEDIN_IMAGE} alt='LinkedIn' />
+                <img className='image-logo' src={linkedinSrc} alt='LinkedIn'
+                  onMouseEnter={() => this.setState({ linkedinSrc: LINKEDIN_COLOR })}
+                  onMouseLeave={() => this.setState({ linkedinSrc: LINKEDIN_BLACK })} />
               </a>
             </span>
           </div>
         </div>
         <div className='row' style={{border: 'none'}}>
-          Strava activities logged: <span>{totalActivities} {!animationDone && `out of ${totalActivitiesFinal}`}</span>
+          <div className='activity-key' /> Strava activities logged: <span>{totalActivities} {!animationDone && `out of ${totalActivitiesFinal}`}</span>
         </div>
-        <div className='row'>🚲work commutes  🚲<span>{numOfCommutes}</span></div>
-        <div className='row'>activities in {location.state}: <span>{activitiesWithinState}</span></div>
+        <div className='row'>
+          <div className='activity-key commute-key'/>work commutes  🚲<span>{numOfCommutes}</span>
+        </div>
+        <div className='row'><div className='state-key' />activities in {location.state}: <span>{activitiesWithinState}</span></div>
+        <div className='footer'>
+          <div style={{ marginBottom: '-10px' }}><em>Application developed with</em> 🖤 <em>by that guy</em> ☝️</div>
+          <br />
+          <em>built with <a href='https://github.com/openlayers/openlayers' target='_blank' rel='noopener noreferrer'>openlayers</a>, <a href='https://reactjs.org/' target='_blank' rel='noopener noreferrer'>react.js</a> & <a href='https://www.strava.com/features' target='_blank' rel='noopener noreferrer'>strava api</a></em>
+        </div>
         <a href='https://www.strava.com/athletes/28790206' target='_blank' rel='noopener noreferrer'>
-          <img className='image' src={STRAVA_LOGO} alt='powered by Strava' />
+          <img className='image' src={stravaSrc} alt='powered by Strava'
+            onMouseEnter={() => this.setState({ stravaSrc: STRAVA_COLOR })}
+            onMouseLeave={() => this.setState({ stravaSrc: STRAVA_GREY })} />
         </a>
       </div>
     )

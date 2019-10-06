@@ -31,7 +31,6 @@ const State = props => {
   )
   source.addFeature(feature)
   map.on('click', ({ pixel }) => console.log(map.getFeaturesAtPixel(pixel)))
-  console.log(map.getLayers())
 
   return null
 }

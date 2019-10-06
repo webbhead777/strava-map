@@ -6,6 +6,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  color: #0074d9;
+}
+a:hover {
+  color: #fc4c02;
+}
+
 #shell {
   position: relative;
 }
@@ -23,7 +30,8 @@ body {
 .image {
   float: right;
   width: 96px;
-  padding-top: 18px;
+  margin-top: 18px;
+  border-radius: 4px;
 }
 
 .container {
@@ -37,7 +45,7 @@ body {
   bottom: 20px;
   right: 26px;
   color: #585858;
-  background: #ffffffde;
+  background: #ffffffed;
   box-shadow: 3px 4px #cececeba;
 }
 
@@ -61,7 +69,8 @@ body {
 
 .title {
   font-weight: bold;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
+  margin-top: 4px;
 }
 
 .sub-title {
@@ -70,8 +79,9 @@ body {
 }
 
 .image-logo {
-  height: 12px;
+  height: 14px;
   margin-right: 6px;
+  border-radius: 2px;
 }
 
 .row {
@@ -86,4 +96,36 @@ body {
 .row > span {
   float: right;
   padding-left: 10px;
+}
+
+.footer {
+  font-size: 10px;
+  font-weight: normal;
+  position: absolute;
+  bottom: 26px;
+}
+
+.activity-key {
+  float: left;
+  border-radius: 50px;
+  width: 12px;
+  height: 12px;
+  margin-top: 5px;
+  margin-right: 6px;
+  background: #fc4c02;
+}
+
+.commute-key {
+  margin-top: 9px;
+  background: #39bb4c;
+}
+
+.state-key {
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin-top: 3px;
+  margin-right: 6px;
+  background: #dbebed;
+  border: 2px solid #0074d9;
 }

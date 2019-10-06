@@ -52,7 +52,7 @@ class Pins extends React.Component {
     setTimeout(() => {
       activities.forEach((activity, i) => {
         const { commute, distance, start_latlng: coords } = activity
-        console.log('coords', coords.reverse())
+        const reversed = coords.reverse() // eslint-disable-line this is required or somehow it doesnt render the points o_O
         const feature = new olFeature({
           geometry: new olPoint(fromLonLat(coords))
         })
