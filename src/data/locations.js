@@ -9,9 +9,21 @@ const locations = [
     state: 'Colorado'
   },
   {
+    coords: fromLonLat([-118.2437, 34.0522]),
+    geometry: getGeomFromJSON('california'),
+    path: 'los-angeles',
+    state: 'California'
+  },
+  {
     coords: fromLonLat([-117.1825, 34.0556]),
     geometry: getGeomFromJSON('california'),
     path: 'redlands',
+    state: 'California'
+  },
+  {
+    coords: fromLonLat([-117.1611, 32.7157]),
+    geometry: getGeomFromJSON('california'),
+    path: 'san-diego',
     state: 'California'
   },
   {
@@ -21,13 +33,25 @@ const locations = [
     state: 'California'
   },
   {
+    coords: fromLonLat([-121.8863, 37.3382]),
+    geometry: getGeomFromJSON('california'),
+    path: 'san-jose',
+    state: 'California'
+  },
+  {
     coords: fromLonLat([-105.2705, 40.0150]),
     geometry: getGeomFromJSON('colorado'),
     path: 'boulder',
     state: 'Colorado'
   },
   {
-    coords: fromLonLat([-85.6681, 42.9634,]),
+    coords: fromLonLat([-104.8214, 38.8339]),
+    geometry: getGeomFromJSON('colorado'),
+    path: 'colorado-springs',
+    state: 'Colorado'
+  },
+  {
+    coords: fromLonLat([-85.6681, 42.9634]),
     geometry: getGeomFromJSON('michigan'),
     path: 'grand-rapids',
     state: 'Michigan'
@@ -37,6 +61,24 @@ const locations = [
     geometry: getGeomFromJSON('nevada'),
     path: 'las-vegas',
     state: 'Nevada'
+  },
+  {
+    coords: fromLonLat([-119.8138, 39.5296]),
+    geometry: getGeomFromJSON('nevada'),
+    path: 'reno',
+    state: 'Nevada'
+  },
+  {
+    coords: fromLonLat([-121.3153, 44.0582]),
+    geometry: getGeomFromJSON('oregon'),
+    path: 'bend',
+    state: 'Oregon'
+  },
+  {
+    coords: fromLonLat([-123.0868, 44.0521]),
+    geometry: getGeomFromJSON('oregon'),
+    path: 'eugene',
+    state: 'Oregon'
   },
   {
     coords: fromLonLat([-122.6750, 45.5051]),
@@ -66,6 +108,12 @@ const locations = [
     coords: fromLonLat([-122.3321, 47.6062]),
     geometry: getGeomFromJSON('washington'),
     path: 'seattle',
+    state: 'Washington'
+  },
+  {
+    coords: fromLonLat([-117.4260, 47.6588]),
+    geometry: getGeomFromJSON('washington'),
+    path: 'spokane',
     state: 'Washington'
   },
   {
