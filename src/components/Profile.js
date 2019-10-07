@@ -45,7 +45,7 @@ class Profile extends React.Component {
         <div className='row'>
           <div className='activity-key commute-key'/>work commutes  🚲<span>{numOfCommutes}</span>
         </div>
-        <div className='row'><div className='state-key' />activities in {location.state}: <span>{activitiesWithinState}</span></div>
+        <div className='row'><div className='state-key' /># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
         <div className='footer'>
           <div style={{ marginBottom: '-10px' }}><em>Application developed with</em> 🖤 <em>by that guy</em> ☝️</div>
           <br />
