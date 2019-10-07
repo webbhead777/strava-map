@@ -17,6 +17,7 @@ class Profile extends React.Component {
   render () {
     const { activitiesWithinState, animationDone, layer, location, map, numOfCommutes, totalActivities, totalActivitiesFinal, totalDistance } = this.props
     const { githubSrc, linkedinSrc, stravaSrc } = this.state
+    const poundsOfCarbon = parseFloat(numOfCommutes * 2.4 * 1.49).toFixed().toLocaleString() // 1.49 pounds of C02 emission from Forester/mi
 
     return (
       <div className='container'>
@@ -42,8 +43,7 @@ class Profile extends React.Component {
         <div className='row' style={{border: 'none'}}>
           <div className='activity-key' /> Strava activities logged: <span>{totalActivities} {!animationDone && `out of ${totalActivitiesFinal}`}</span>
         </div>
-        <div className='row'>
-          <div className='activity-key commute-key'/>work commutes  🚲<span>{numOfCommutes}</span>
+        <div className='row' style={{ fontSize: '12px' }}><b>🚲</b> CO2 saved from <div className='commute-count'>{numOfCommutes}</div> work commutes:<span>{poundsOfCarbon}lbs</span>
         </div>
         <div className='row'><div className='state-key' /># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
         <div className='footer'>

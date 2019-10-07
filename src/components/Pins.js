@@ -61,9 +61,9 @@ class Pins extends React.Component {
           new olStyle({
             image: new olCircleStyle({
               radius: 10,
-              fill: new olFill({ color: commute ? '#7dde8b' : '#f8ab87' }),
+              fill: new olFill({ color: '#f8ab87' }),
               stroke: new olStroke({
-                color: commute ? '#0f9222' : '#fc4c02',
+                color: '#fc4c02',
                 width: 4
               })
             })
@@ -123,9 +123,9 @@ class Pins extends React.Component {
               new olStyle({
                 image: new olCircleStyle({
                   radius: 5,
-                  fill: new olFill({ color: commute ? '#0f9222' : '#fc4c02' }),
+                  fill: new olFill({ color: '#fc4c02' }),
                   stroke: new olStroke({
-                    color: commute ? '#0f9222' : '#fc4c02',
+                    color: '#fc4c02',
                     width: 4
                   })
                 })

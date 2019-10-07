@@ -29,9 +29,8 @@ a:hover {
 
 .image {
   float: right;
-  width: 96px;
-  margin-top: 18px;
-  border-radius: 4px;
+  width: 75px;
+  margin-top: 22px;
 }
 
 .container {
@@ -96,6 +95,18 @@ a:hover {
 .row > span {
   float: right;
   padding-left: 10px;
+  font-size: 16px;
+  text-transform: lowercase;
+}
+.row > b {
+  font-size: 20px;
+}
+
+.commute-count {
+  min-width: 30px;
+  display: inline-block;
+  font-size: 16px;
+  text-align: center;
 }
 
 .footer {
