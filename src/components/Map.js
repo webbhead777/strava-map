@@ -13,63 +13,129 @@ import { easeIn } from 'ol/easing'
 import OSM from 'ol/source/OSM'
 // import { BingMaps, Vector as olVectorSource } from 'ol/source'
 import { fromLonLat } from 'ol/proj'
-import STRAVA_LOGO from '../images/strava-logo.svg'
+import qs from 'qs'
+import PERSON_IMAGE from '../images/person.png'
+import PIN_IMAGE from '../images/pin.png'
+import locations from '../data/locations'
 import Pins from './Pins'
+import State from './State'
 
-const DENVER_COORD = fromLonLat([-104.991531, 39.742043])
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js'
+import {Cluster, Vector as VectorSource} from 'ol/source.js'
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js'
+
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 
 class Map extends React.Component {
   constructor () {
     super()
 
-
-    const baseLayer = new olTileLayer({
-      source: new OSM()
-    })
-    const layer = new olVectorLayer({
+    const { imgUrl, loc } = qs.parse(window.location.search, { ignoreQueryPrefix: true })
+    const location = locations.find(location => location.path === loc) || locations[0]
+    const baseLayer = new olTileLayer({ source: new OSM() })
+    const pinsLayer = new olVectorLayer({ source: new olVectorSource() })
+    const stateLayer = new olVectorLayer({ source: new olVectorSource() })
+    const distance = document.getElementById('distance')
+    const clusterSource = new Cluster({
       source: new olVectorSource()
+    })
+    const styleCache = {} // this makes prev size computes more efficient
+    const clusterLayer = new VectorLayer({
+      source: clusterSource,
+      style: feature => {
+        var size = feature.get('features').length;
+        var style = styleCache[size];
+        if (!style) {
+          style = new Style({
+            image: new CircleStyle({
+              radius: 10,
+              stroke: new Stroke({
+                color: '#fff'
+              }),
+              fill: new Fill({
+                color: '#3399CC'
+              })
+            }),
+            text: new Text({
+              text: size.toString(),
+              fill: new Fill({
+                color: '#fff'
+              })
+            })
+          });
+          styleCache[size] = style;
+        }
+        return style;
+      }
     })
     const map = new olMap({
       view: new olView({
-        center: DENVER_COORD,
+        center: location.coords,
         zoom: 11
       }),
       controls: [],
       interactions: [], // remove interactions to add back after animation
       layers: [
         baseLayer,
-        layer
+        pinsLayer,
+        clusterLayer,
+        stateLayer
       ],
       target: 'map'
     })
 
     this.state = {
-      initialized: false,
       baseLayer,
-      layer,
+      clusterLayer,
+      imgUrl: imgUrl || null,
+      initialized: false,
+      pinsLayer,
+      stateLayer,
+      location,
       map
     }
   }
 
   componentDidMount () {
-    const { layer, map } = this.state
-    const source = layer.getSource()
-    const stravaLogoFeature = new olFeature({
-      geometry: new olPoint(DENVER_COORD)
+    const { imgUrl, stateLayer, location, map } = this.state
+    const source = stateLayer.getSource()
+    const locationLogoFeature = new olFeature({
+      geometry: new olPoint(location.coords)
     })
+    const src = imgUrl || PIN_IMAGE
+    const imageElem = new Image()
+    let zoomedOutScale
+    const createOlImage = () => {
+      const longestPlane = imageElem.naturalWidth > imageElem.naturalHeight ? imageElem.naturalWidth : imageElem.naturalHeight
+      const scale = 260 / longestPlane
+      zoomedOutScale = 120 / longestPlane
 
-    stravaLogoFeature.setStyle(
+      locationLogoFeature.setStyle(
+        new olStyle({
+          image: new olIcon({
+            src,
+            scale
+          })
+        })
+      )
+    }
+    imageElem.onload = createOlImage
+    imageElem.src = src
+
+    const homeImageFeature = new olFeature({
+      geometry: new olPoint(fromLonLat([-90.253143, 38.617015])) // south city stl
+    })
+    homeImageFeature.setStyle(
       new olStyle({
         image: new olIcon({
-          src: STRAVA_LOGO
+          src: PERSON_IMAGE,
+          scale: .25
         })
       })
     )
-    // add strava logo after tiles load in
-    map.once('rendercomplete', () => {
-      setTimeout(() => source.addFeature(stravaLogoFeature), 800)
-    })
+
+    // add location logo after tiles load in
+    setTimeout(() => source.addFeature(locationLogoFeature), 2000)
     source.once('addfeature', (e) => {
       // animation delay
       setTimeout(() => {
@@ -77,28 +143,37 @@ class Map extends React.Component {
 
         // move view to stl
         view.animate({
-          anchor: DENVER_COORD,
+          anchor: location.coords,
           center: STL_COORD,
           easing: easeIn,
           duration: 400,
           zoom: 11
         })
         // scale logo down for new extent
-        stravaLogoFeature.getStyle().getImage().setScale(.5)
+        locationLogoFeature.getStyle().getImage().setScale(zoomedOutScale)
+        // add home image
+        source.addFeature(homeImageFeature)
         // slightly longer than animation duration
         setTimeout(() => {
           this.setState({ initialized: true })
-        }, 1000)
-      }, 800)
+          // remove home image
+          source.removeFeature(homeImageFeature)
+        }, 2000)
+      }, 1500)
     })
   }
 
   render () {
-    const { initialized, layer, map } = this.state
+    const { initialized, pinsLayer, stateLayer, location, map } = this.state
 
-    return !initialized ? null : (
-      <Pins layer={layer} map={map} />
-    )
+    return !initialized
+      ? null
+      :  (
+        <React.Fragment>
+          <State location={location} layer={stateLayer} map={map} />
+          <Pins layer={pinsLayer} location={location} map={map} />
+        </React.Fragment>
+      )
   }
 }
 

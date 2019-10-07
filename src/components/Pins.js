@@ -1,9 +1,7 @@
 import React from  'react'
-import olView from 'ol/View'
 import olFeature from 'ol/Feature'
 import olPoint from 'ol/geom/Point'
 import olStyle from 'ol/style/Style'
-import olIcon from 'ol/style/Icon'
 import olCircleStyle from 'ol/style/Circle'
 import olFill from 'ol/style/Fill'
 import olStroke from 'ol/style/Stroke'
@@ -13,34 +11,48 @@ import olDragPan from 'ol/interaction/DragPan'
 import { easeIn } from 'ol/easing'
 import { fromLonLat } from 'ol/proj'
 import ACTIVITIES from '../data/activities'
+import LOCATIONS from '../data/locations'
+import PERSON_IMAGE from '../images/person.png'
+import LOGO from '../images/powered_by_strava.png'
+import olIcon from 'ol/style/Icon'
+import Profile from './Profile'
+
+import olPolygon from 'ol/geom/Polygon'
+import olMultiPolygon from 'ol/geom/MultiPolygon'
+import { getBoundaryFromState } from '../utils'
+console.log(ACTIVITIES)
 
 const STL_COORD = fromLonLat([-90.4994, 38.6270])
 const US_CENTER_COORD = fromLonLat([-97.0000, 38.0000])
-// this is hacky
-let distanceInMeters = 0
-ACTIVITIES.forEach(({ distance }) => distanceInMeters += distance)
-const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
 
 class Pins extends React.Component {
   constructor () {
     super()
 
     this.state = {
-      animationDone: false
+      activitiesWithinState: 0,
+      animationDone: false,
+      numOfCommutes: 0,
+      totalActivities: 0,
+      totalActivitiesFinal: ACTIVITIES.length,
+      totalDistance: 0
     }
   }
 
   componentDidMount () {
-    const { layer, map } = this.props
+    const { layer, location, map } = this.props
     const source = layer.getSource()
     const activities = ACTIVITIES.reverse()
-    console.log(activities)
+    const highlightedStates = []
+    let activitiesWithinState = 0
+    let distanceInMeters = 0
+    let numOfCommutes = 0
+    let totalActivities = 0
 
     setTimeout(() => {
-
       activities.forEach((activity, i) => {
-        const { start_latlng: coords } = activity
-        console.log('coords', coords.reverse())
+        const { commute, distance, start_latlng: coords } = activity
+        const reversed = coords.reverse() // eslint-disable-line this is required or somehow it doesnt render the points o_O
         const feature = new olFeature({
           geometry: new olPoint(fromLonLat(coords))
         })
@@ -51,7 +63,8 @@ class Pins extends React.Component {
               radius: 10,
               fill: new olFill({ color: '#f8ab87' }),
               stroke: new olStroke({
-                color: '#fc4c02', width: 4
+                color: '#fc4c02',
+                width: 4
               })
             })
           })
@@ -60,21 +73,66 @@ class Pins extends React.Component {
           setTimeout(() => {
             source.addFeature(feature)
             resolve(feature)
-          }, i * 22)
+          }, i * 20)
         })
         .then(feature => {
           setTimeout(() => {
+            const totalDistance = parseFloat(distanceInMeters / 1609.34).toFixed(0) // meters per mile
+            const activityIsWithinState = !!location.geometry.intersectsCoordinate(coords)
+
+            // check if activity coords intersect us state geometry
+            if (activityIsWithinState) {
+              activitiesWithinState++
+            } else {
+              // check to see which activity the state intersects
+              LOCATIONS.forEach(loc => {
+                if (!highlightedStates.includes(loc.state) && !!loc.geometry.intersectsCoordinate(coords)) {
+                  const source = layer.getSource()
+                  const { geometry } = getBoundaryFromState(loc.state)
+                  const coords = geometry.type === 'MultiPolygon'
+                    ? geometry.coordinates.map(c => c.map(c => c.map(c => fromLonLat(c))))
+                    : geometry.coordinates.map(c => c.map(c => fromLonLat(c)))
+                  const olGeom = geometry.type === 'MultiPolygon'
+                    ? new olMultiPolygon(coords)
+                    : new olPolygon(coords)
+                  const feature = new olFeature({ geometry: olGeom })
+
+                  feature.setStyle(
+                    new olStyle({
+                      fill: new olFill({ color: '#ffe37336' }),
+                      stroke: new olStroke({
+                        color: '#ffe373', width: 2
+                      }),
+                      opacity: .6
+                    })
+                  )
+                  source.addFeature(feature)
+                  highlightedStates.push(loc.state)
+                }
+              })
+            }
+            // increment total
+            totalActivities++
+            // addon distance for each activity
+            distanceInMeters += distance
+            // check if commute
+            if (commute) numOfCommutes++
+
+            this.setState({ activitiesWithinState, numOfCommutes, totalActivities, totalDistance })
             feature.setStyle(
               new olStyle({
                 image: new olCircleStyle({
                   radius: 5,
                   fill: new olFill({ color: '#fc4c02' }),
                   stroke: new olStroke({
-                    color: '#fc4c02', width: 2
+                    color: '#fc4c02',
+                    width: 4
                   })
                 })
               })
             )
+
+            // only on last animation
             if (i === activities.length - 1) {
               this.setState({ animationDone: true })
               // add interactions back no that animation is done
@@ -82,7 +140,7 @@ class Pins extends React.Component {
               map.addInteraction(new olMouseWheelZoom())
               map.addInteraction(new olDragPan())
             }
-          }, 600)
+          }, 100)
         })
       })
 
@@ -97,24 +155,17 @@ class Pins extends React.Component {
           duration: 400,
           zoom: 5
         })
-
       }, 2400)
     }, 1000)
   }
 
   render () {
-    return !this.state.animationDone
-      ? null
-      : (
-        <a href='https://www.strava.com/athletes/28790206' target='_blank'>
-          <div className='container'>
-            <div className='row'>Strava Activities: <span>{ACTIVITIES.length}</span></div>
-            <div className='row'>Miles Logged: <span>{totalDistance}</span></div>
-            <div className='row'># of Activities in Colorado: <span>0</span></div>
-            <div className='row'><span style={{fontWeight: 'normal', fontSize: '18px'}}>🙀<em>help me fix this</em>☝🏻</span></div>
-          </div>
-        </a>
-      )
+    const { layer, location, map } = this.props
+    const { activitiesWithinState, numOfCommutes, totalActivities, totalDistance } = this.state
+
+    return (
+      <Profile {...this.props} {...this.state} />
+    )
   }
 }
 
