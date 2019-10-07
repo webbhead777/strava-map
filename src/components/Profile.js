@@ -43,7 +43,7 @@ class Profile extends React.Component {
         <div className='row' style={{border: 'none'}}>
           <div className='activity-key' /> Strava activities logged: <span>{totalActivities} {!animationDone && `out of ${totalActivitiesFinal}`}</span>
         </div>
-        <div className='row' style={{ fontSize: '12px' }}><b>🚲</b> CO2 saved from <div className='commute-count'>{numOfCommutes}</div> work commutes:<span>{poundsOfCarbon}lbs</span>
+        <div className='row' style={{ fontSize: '12px' }}><b>🚲</b> CO2 saved from <div className='commute-count'>{numOfCommutes}</div> work commutes:<span style={{ paddingTop: '6px' }}>{poundsOfCarbon}lbs</span>
         </div>
         <div className='row'><div className='state-key' /># of activities in {location.state}: <span>{activitiesWithinState}</span></div>
         <div className='footer'>
